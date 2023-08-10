@@ -2,7 +2,7 @@
   <div>
 
       <!-- Start Slide -->
-      <b-container class="main-slide">
+      <!-- <b-container class="main-slide">
         <b-carousel
           id="carousel-fade"
           style="text-shadow: 0px 0px 2px #000"
@@ -30,7 +30,7 @@
           </template>
           </b-carousel-slide>
         </b-carousel>
-      </b-container>
+      </b-container> -->
       <!-- End Slide -->
 
       <!-- Start Article -->
