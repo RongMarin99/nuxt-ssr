@@ -2,7 +2,7 @@
   "name": "KroIT",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nuxt --hostname '0' --port 8000",
+    "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
