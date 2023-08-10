@@ -58,9 +58,12 @@ import { mapGetters } from 'vuex'
 export default{
     colorMode: 'light',
     name: "Detail",
-    async fetch ({ store, $axios, params }) {
+    async asyncData ({ store, $axios, params }) {
         var meta = await $axios.$get(`https://api.kroit.xyz/api/detail/${params.id}/${params.type}`)
-        await store.dispatch('articles/setArticle',meta); 
+      
+        return {
+            meta: meta
+        }
     },
     head(){
         return {
@@ -135,7 +138,7 @@ export default{
     },
     computed: {
         ...mapGetters({
-            meta: 'articles/article'
+            //meta: 'articles/article'
         })
     },
     methods: {

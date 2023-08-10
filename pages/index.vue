@@ -4,23 +4,21 @@
       <!-- Start Slide -->
       <b-container class="main-slide">
         <b-carousel
-          id="carousel-fade"
           style="text-shadow: 0px 0px 2px #000"
           fade
-          interval=10000
+          :interval="10000"
           indicators
           img-width="1024"
           img-height="480"
-         
         >
           <b-carousel-slide
-            v-for="item in slide" :key="item"
-            
+            v-for="item in slide" :key="item.index"
           >
           <template #img>
             <figure>
               <nuxt-img 
                 loading="lazy"
+                fade
                 format="webp"
                 quality="80"
                 :src="`${api_key}/image_etec/${item['image']}`"
@@ -44,7 +42,7 @@
         <div class="mt-5">
           <b-tabs pills content-class="mt-3" align="center">
             <b-tab active :title="$t('article')" @click="get(key.article)">
-              <b-row v-if="article_loading" class="mt-5" >
+              <!-- <b-row v-if="article_loading" class="mt-5" >
                 <b-col cols="12" style="margin-bottom:-3rem">
                   <b-overlay
                         id="overlay-background"
@@ -78,9 +76,9 @@
                     </b-overlay>
                   </div>
                 </b-col>
-              </b-row>
-             
-              <b-row v-else class="mt-5">
+              </b-row> -->
+        
+              <b-row class="mt-5">
                 <b-col cols="12" class="position-relative " >
                   <figure >
                     <div
@@ -466,19 +464,26 @@
 
 <script>
 import moment from 'moment';
+
 export default {
   colorMode: 'light',
   async asyncData({$axios}) {
-    const slide = await $axios.post('slide/lists')
+    const slide = await $axios.post('slide/lists').then(res => {
+      return res.data.data
+    })
+    const article = await $axios.$get('setting/article')
     // const default_article = await $axios.$get('setting/article')
-    // const news = await $axios.post('getAllNews',{skip:0})
+    const news = await $axios.post('getAllNews',{skip:0}).then(res => {
+      return res.data
+    })
     // const founder = await $axios.$get('founder/get')
     return {
-      slide: slide.data.data.data,
+      slide: slide.data,
+      default_article: article,
       // article_loading: false,
       // article_new_action: false,
       // default_article: default_article,
-      // news: news.data.data,
+      news: news.data,
     }
   },
   head () {
@@ -514,6 +519,7 @@ export default {
   },
   data() {
     return {
+      slide_loading: true,
       web_url: process.env.WEB_URL,
       course_per_page: '',
       course_total: '',
@@ -524,17 +530,15 @@ export default {
       article_loading: true,
       article_load_more_loading: true,
       article_table_size: 0,
-      article_new_action: true,
+      article_new_action: false,
       job_loading: true,
       job_load_more_loading: true,
       job_table_size: 0,
       job_new_action: true,
       api_key: process.env.BASE_URL,
       allVideos: [],
-      news: [],
       courses: [],
       job: [],
-      default_course: '',
       default_article: '',
       default_job: '',
       key: {
@@ -547,10 +551,13 @@ export default {
       founder: '',
     }
   },
+  created(){
+   // this.getSlide()
+    this.getFounder()
+  },
   mounted() {
    // this.getSlide()
-    this.get()
-    this.getFounder()
+    //this.get()
   },
   watch: {
   },
@@ -568,7 +575,6 @@ export default {
             this.course_load_more_loading = true
           })
         }
-        
       }else if(key==this.key.article){
         if(this.article_new_action){
             await this.$axios.$get('setting/article').then(response => {
