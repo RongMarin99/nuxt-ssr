@@ -2,7 +2,7 @@
   "name": "KroIT",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nuxt",
+    "dev": "nuxt --hostname '0' --port 8000",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
@@ -26,6 +26,7 @@
     "nuxt-material-design-icons-iconfont": "^1.0.2",
     "vue": "^2.7.10",
     "vue-flag-icon": "^2.1.0",
+    "vue-lazyload": "^3.0.0-rc.2",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
     "vuex": "^3.6.2"
